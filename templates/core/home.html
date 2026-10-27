@@ -1,21 +1,749 @@
-{% extends "base.html" %}
-{% block title %}خانه | PardisBook{% endblock %}
-{% block content %}
-<section class="hero">
-  <div class="hero-copy">
-    <span class="eyebrow">دانش، همیشه در دسترس</span>
-    <h1>کتاب بعدی‌ات را<br><em>اینجا پیدا کن.</em></h1>
-    <p>در پردیس‌بوک، کتاب‌ها را جست‌وجو کن، جزئیاتشان را ببین و برای عضویت در کتابخانه اقدام کن.</p>
-    <div class="hero-actions">
-      <a class="button button-primary" href="{% url 'books:list' %}">مشاهده کتاب‌ها</a>
-      <a class="button button-secondary" href="{% url 'accounts:register' %}">عضویت در کتابخانه</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="کتابخانه؛ فضایی برای کشف کتاب‌های تازه، یادگیری و مدیریت آسان امانت‌ها.">
+
+    <title>کتاب‌خانه | دریچه‌ای به دنیای دانایی</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #245b4a;
+            --primary-dark: #173f35;
+            --accent: #d6ad68;
+            --background: #f8f7f2;
+            --white: #ffffff;
+            --text: #1d302b;
+            --muted: #718079;
+            --border: #e5eae4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Vazirmatn", Tahoma, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.9;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1160px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        /* نوار بالای سایت */
+
+        .topbar {
+            background: var(--primary-dark);
+            color: #eaf2ed;
+            padding: 7px 0;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* سربرگ و منوی اصلی */
+
+        .header {
+            background: rgba(248, 247, 242, 0.96);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar {
+            min-height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        
+        .logo-image {
+            width: 80px;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .logo-text small {
+            display: block;
+            font-size: 10px;
+            color: var(--muted);
+            font-weight: 400;
+            margin-top: -5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            color: #566760;
+            font-size: 13px;
+        }
+
+        .nav-links a {
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 18px;
+            border-radius: 11px;
+            border: 1px solid transparent;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .btn-primary {
+            color: white;
+            background: var(--primary);
+            box-shadow: 0 6px 15px rgba(36, 91, 74, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border-color: #d5ded6;
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: #eaf1e9;
+        }
+
+        /* بخش اصلی و معرفی کتابخانه */
+
+        .hero {
+            padding: 75px 0 65px;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 55px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 13px;
+            border-radius: 30px;
+            background: #e9f0e8;
+            color: var(--primary);
+            border: 1px solid #dce8dc;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .eyebrow span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .hero h1 {
+            margin: 23px 0 18px;
+            font-size: clamp(32px, 4vw, 52px);
+            line-height: 1.6;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 strong {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 570px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 2.3;
+            margin-bottom: 28px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .hero-note {
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* تصویرسازی کتاب‌ها با CSS */
+
+        .hero-visual {
+            min-height: 420px;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+
+        .visual-background {
+            position: absolute;
+            inset: 20px;
+            background: linear-gradient(145deg, #e6eddf, #f0e6d5);
+            border-radius: 48% 48% 25px 25px;
+            transform: rotate(0deg);
+        }
+
+        .sun {
+            position: absolute;
+            top: 35px;
+            left: 55px;
+            width: 75px;
+            height: 75px;
+            background: #dfbb7c;
+            border-radius: 50%;
+        }
+
+        .books {
+            position: relative;
+            width: 350px;
+            height: 300px;
+        }
+
+        .book {
+            position: absolute;
+            bottom: 20px;
+            width: 125px;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 6px 13px 13px 6px;
+            box-shadow: 9px 15px 25px #213c3028;
+            text-align: center;
+            font-size: 19px;
+            font-weight: 800;
+            line-height: 2;
+        }
+
+        .book-one {
+            right: 24px;
+            background: linear-gradient(140deg, #bd7957, #814b36);
+            color: white;
+            transform: rotate(10deg);
+        }
+
+        .book-two {
+            right: 115px;
+            bottom: 35px;
+            height: 235px;
+            z-index: 2;
+            background: linear-gradient(140deg, #39705b, #173f35);
+            color: white;
+            transform: rotate(-4deg);
+        }
+
+        .book-three {
+            right: 205px;
+            background: linear-gradient(140deg, #e2c07e, #b68b45);
+            color: #463722;
+            transform: rotate(-12deg);
+        }
+
+        .book::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 10px;
+            width: 2px;
+            background: #ffffff45;
+        }
+
+        .floating-card {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 15px;
+            border-radius: 14px;
+            background: white;
+            box-shadow: 0 12px 35px #1b3b2d17;
+        }
+
+        .floating-card.top {
+            top: 60px;
+            right: 0;
+        }
+
+        .floating-card.bottom {
+            bottom: 45px;
+            left: 0;
+        }
+
+        .floating-icon {
+            width: 39px;
+            height: 35px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: #edf3e9;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .floating-card strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .floating-card small {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        /* امکانات */
+
+        .features-section {
+            padding: 60px 0 75px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-label {
+            color: #a17d42;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .section-heading h2 {
+            margin-top: 5px;
+            font-size: clamp(23px, 3vw, 32px);
+        }
+
+        .section-heading p {
+            max-width: 420px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 27px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            transition: 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px #1b3b2d12;
+            border-color: #cbdccf;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            background: #eaf2eb;
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 2.2;
+        }
+
+        /* بخش پایانی */
+
+        .quote-section {
+            padding: 48px 0;
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .quote-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .quote-text h2 {
+            font-size: clamp(20px, 3vw, 28px);
+            line-height: 1.8;
+        }
+
+        .quote-text p {
+            margin-top: 8px;
+            color: #c3d4ca;
+            font-size: 12px;
+        }
+
+        .quote-section .btn {
+            border-color: #769285;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        /* پابرگ */
+
+        .footer {
+            padding: 25px 0;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border-top: 1px solid var(--border);
+            padding-top: 22px;
+        }
+
+        /* نمایش در موبایل و تبلت */
+
+        @media (max-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .hero-visual {
+                min-height: 380px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: calc(100% - 28px);
+            }
+
+            .navbar {
+                min-height: 72px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .header-actions .btn-outline {
+                display: none;
+            }
+
+            .header-actions .btn {
+                padding: 9px 11px;
+                font-size: 10px;
+            }
+
+            .hero {
+                padding-top: 45px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero-visual {
+                min-height: 330px;
+            }
+
+            .books {
+                transform: scale(0.8);
+            }
+
+            .floating-card.top {
+                top: 20px;
+            }
+
+            .floating-card.bottom {
+                bottom: 10px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading,
+            .quote-inner,
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .features-section {
+                padding: 40px 0 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        کتابخانه؛ جایی برای کشف داستان‌های تازه و اندیشه‌های بزرگ
     </div>
-  </div>
-  <div class="book-art" aria-hidden="true"><div class="sun"></div><div class="book-symbol">▤</div><div class="art-caption">READ · LEARN · GROW</div></div>
-</section>
-<section class="features">
-  <div><span>۰۱</span><h2>جست‌وجوی آسان</h2><p>عنوان، نویسنده یا دسته‌بندی کتاب را جست‌وجو کن.</p></div>
-  <div><span>۰۲</span><h2>اطلاعات دقیق</h2><p>جزئیات کتاب و وضعیت نسخه‌های موجود را ببین.</p></div>
-  <div><span>۰۳</span><h2>عضویت ساده</h2><p>حساب بساز و برای امکانات بعدی آماده شو.</p></div>
-</section>
-{% endblock %}
+
+    <header class="header">
+        <div class="container navbar">
+
+            <a href="/" class="logo">
+                <img
+                    src="{% static 'images/logo.png' %}"
+                    alt="لوگو"
+                    class="logo-image"
+                >
+                <span class="logo-text">
+                    کتابخانه
+                    <small>سامانه مدیریت کتابخانه</small>
+                </span>
+            </a>
+
+            <nav class="nav-links" aria-label="منوی اصلی">
+                <a href="/">صفحه اصلی</a>
+                <a href="#features">امکانات</a>
+                <a href="#about">درباره ما</a>
+                <a href="{% url 'books:list' %}" class="btn btn-primary">فهرست کتاب‌ها</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="/admin/" class="btn btn-outline">ورود مدیر</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary">ورود اعضا ←</a>
+            </div>
+
+        </div>
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <div class="container hero-grid">
+
+                <div class="hero-content">
+
+                    <span class="eyebrow">
+                        <span></span>
+                        به دنیای بی‌انتهای دانایی خوش آمدید
+                    </span>
+
+                    <h1>
+                        هر کتاب<br>
+                        شروع یک <strong>ماجرای تازه</strong>
+                    </h1>
+
+                    <p class="hero-description">
+                        در کتابخانه فرصت دارید کتاب‌های تازه کشف کنید،
+                        با نویسندگان محبوبتان آشنا شوید و مسیر امانت کتاب‌ها
+                        را آسان‌تر دنبال کنید. شاید کتابی که مدت‌ها دنبالش
+                        بودید، همین‌جا منتظر شما باشد!
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="/books/" class="btn btn-primary">
+                            کشف کتاب‌ها <span>←</span>
+                        </a>
+
+                        <a href="#features" class="btn btn-outline">
+                            آشنایی با امکانات
+                        </a>
+                    </div>
+
+                    <p class="hero-note">
+                        برای عاشقان مطالعه، جویندگان دانش و ذهن‌های کنجکاو
+                    </p>
+
+                </div>
+
+                <div class="hero-visual" aria-label="تصویرسازی تزئینی کتاب‌ها">
+
+                    <div class="visual-background"></div>
+                    <div class="sun"></div>
+
+                    <div class="books" aria-hidden="true">
+                        <div class="book book-one">هنر<br>زندگی</div>
+                        <div class="book book-two">راهی به<br>دانایی</div>
+                        <div class="book book-three">قصه‌های<br>بی‌پایان</div>
+                    </div>
+
+                    <div class="floating-card top">
+                        <div class="floating-icon">✦</div>
+                        <div>
+                            <strong>هر روز، یک کشف تازه</strong>
+                            <small>ماجراجویی میان صفحات کتاب</small>
+                        </div>
+                    </div>
+
+                    <div class="floating-card bottom">
+                        <div class="floating-icon">⌕</div>
+                        <div>
+                            <strong>جست‌وجوی آسان کتاب‌ها</strong>
+                            <small>عنوان، نویسنده و موضوع</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section class="features-section" id="features">
+            <div class="container">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">امکانات کتابخانه</span>
+                        <h2>تجربه‌ای ساده‌تر برای کتاب‌دوستان</h2>
+                    </div>
+
+                    <p>
+                        از پیدا کردن کتاب موردعلاقه‌تان تا پیگیری امانت‌ها؛
+                        همه‌چیز برای مدیریت بهتر تجربه کتاب‌خوانی طراحی شده است.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+
+                    <article class="feature-card">
+                        <div class="feature-icon">⌕</div>
+                        <h3>جست‌وجو و کشف کتاب‌ها</h3>
+                        <p>
+                            کتاب‌ها را بر اساس عنوان، نام نویسنده یا موضوع
+                            پیدا کنید و با گزینه‌های تازه برای مطالعه آشنا شوید.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="feature-icon">▤</div>
+                        <h3>مدیریت آسان امانت‌ها</h3>
+                        <p>
+                            کتاب‌های امانت‌گرفته‌شده و تاریخ بازگشت آن‌ها را
+                            در فضایی منظم دنبال کنید.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="feature-icon">♧</div>
+                        <h3>حساب کاربری اعضا</h3>
+                        <p>
+                            به بخش عضویت دسترسی داشته باشید و اطلاعات
+                            مربوط به فعالیت‌های کتابخانه‌ای خود را پیگیری کنید.
+                        </p>
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section class="quote-section" id="about">
+            <div class="container quote-inner">
+
+                <div class="quote-text">
+                    <h2>گاهی یک کتاب، نگاه ما به جهان را تغییر می‌دهد.</h2>
+                    <p>
+                        کتابخانه؛ همراه شما برای خواندن، آموختن و کشف مسیرهای تازه.
+                    </p>
+                </div>
+
+                <a href="/admin/" class="btn">
+                    ورود به پنل مدیریت ←
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span>© سامانه مدیریت کتابخانه</span>
+            <span>ساخته‌شده با عشق به کتاب و دانایی</span>
+        </div>
+    </footer>
+
+</body>
+</html>
