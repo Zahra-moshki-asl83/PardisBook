@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}ورود | PardisBook{% endblock %}
+{% block content %}
+<section class="form-panel"><span class="eyebrow">خوش برگشتی</span><h1>ورود به حساب</h1>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="button button-primary" type="submit">ورود</button></form>
+<p class="form-note">حساب نداری؟ <a href="{% url 'accounts:register' %}">ثبت‌نام کن</a></p></section>
+{% endblock %}

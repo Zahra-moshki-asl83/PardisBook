@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}عضویت | PardisBook{% endblock %}
+{% block content %}
+<section class="form-panel"><span class="eyebrow">به پردیس‌بوک بپیوند</span><h1>ساخت حساب کاربری</h1>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="button button-primary" type="submit">ثبت‌نام</button></form>
+<p class="form-note">حساب داری؟ <a href="{% url 'accounts:login' %}">وارد شو</a></p></section>
+{% endblock %}

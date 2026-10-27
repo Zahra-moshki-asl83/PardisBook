@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} | PardisBook{% endblock %}
+{% block content %}
+<section class="detail-card">
+  <span class="eyebrow">جزئیات کتاب</span><h1>{{ book.title }}</h1>
+  <p><strong>نویسنده:</strong> {{ book.author }}</p>
+  {% if book.category %}<p><strong>دسته‌بندی:</strong> {{ book.category }}</p>{% endif %}
+  {% if book.isbn %}<p><strong>شابک:</strong> {{ book.isbn }}</p>{% endif %}
+  {% if book.published_year %}<p><strong>سال انتشار:</strong> {{ book.published_year }}</p>{% endif %}
+  <p><strong>نسخه‌های موجود:</strong> {{ book.available_copies }} از {{ book.total_copies }}</p>
+  {% if book.description %}<p>{{ book.description|linebreaks }}</p>{% endif %}
+  <a class="button button-secondary" href="{% url 'books:list' %}">بازگشت به فهرست</a>
+</section>
+{% endblock %}

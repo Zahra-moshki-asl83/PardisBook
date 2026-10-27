@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}خانه | PardisBook{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">دانش، همیشه در دسترس</span>
+    <h1>کتاب بعدی‌ات را<br><em>اینجا پیدا کن.</em></h1>
+    <p>در پردیس‌بوک، کتاب‌ها را جست‌وجو کن، جزئیاتشان را ببین و برای عضویت در کتابخانه اقدام کن.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="{% url 'books:list' %}">مشاهده کتاب‌ها</a>
+      <a class="button button-secondary" href="{% url 'accounts:register' %}">عضویت در کتابخانه</a>
+    </div>
+  </div>
+  <div class="book-art" aria-hidden="true"><div class="sun"></div><div class="book-symbol">▤</div><div class="art-caption">READ · LEARN · GROW</div></div>
+</section>
+<section class="features">
+  <div><span>۰۱</span><h2>جست‌وجوی آسان</h2><p>عنوان، نویسنده یا دسته‌بندی کتاب را جست‌وجو کن.</p></div>
+  <div><span>۰۲</span><h2>اطلاعات دقیق</h2><p>جزئیات کتاب و وضعیت نسخه‌های موجود را ببین.</p></div>
+  <div><span>۰۳</span><h2>عضویت ساده</h2><p>حساب بساز و برای امکانات بعدی آماده شو.</p></div>
+</section>
+{% endblock %}

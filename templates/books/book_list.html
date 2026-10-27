@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}فهرست کتاب‌ها | PardisBook{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">کتابخانه</span><h1>فهرست کتاب‌ها</h1><p>کتاب مورد نظرت را پیدا کن.</p></section>
+<form class="search-form" method="get">
+  <input name="q" value="{{ query }}" placeholder="عنوان، نویسنده یا دسته‌بندی..." aria-label="جست‌وجوی کتاب">
+  <button class="button button-primary" type="submit">جست‌وجو</button>
+</form>
+<div class="book-grid">
+{% for book in books %}
+  <article class="book-card"><span class="book-tag">{{ book.category|default:"کتاب" }}</span><h2><a href="{% url 'books:detail' book.pk %}">{{ book.title }}</a></h2><p>نویسنده: {{ book.author }}</p><small>نسخه‌های موجود: {{ book.available_copies }}</small></article>
+{% empty %}
+  <p class="empty-state">هنوز کتابی ثبت نشده یا نتیجه‌ای پیدا نشد.</p>
+{% endfor %}
+</div>
+{% endblock %}
